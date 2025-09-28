@@ -137,6 +137,11 @@ header { background:#111a33; padding:10px 20px; display:flex; justify-content:sp
   color:#111;
 }
 
+/* Togel Table */
+#togelTable table { width:100%; border-collapse:collapse; }
+#togelTable th, #togelTable td { padding:8px; border-bottom:1px solid #FFD700; }
+
+/* QRIS */
 #qrisImage { width:250px; max-width:80%; height:auto; display:block; margin:15px auto; border-radius:8px; }
 
 /* Footer menu (Bottom Navigation) */
@@ -280,6 +285,31 @@ header { background:#111a33; padding:10px 20px; display:flex; justify-content:sp
   <div class="game-type-card" data-type="slot">🎰 Slot</div>
   <div class="game-type-card" data-type="togel">🎲 Togel</div>
   <div class="game-type-card" data-type="casino">🎮 Casino</div>
+</div>
+
+<!-- Togel Table -->
+<div id="togelTable" style="display:none; margin-top:20px; text-align:center;">
+  <h3>Table Pasaran</h3>
+  <table>
+    <thead>
+      <tr style="border-bottom:2px solid #FFD700;">
+        <th>Nomor Keluaran</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Buku Mimpi</td></tr>
+      <tr><td>TOTO WUHAN</td></tr>
+      <tr><td>HK SIANG</td></tr>
+      <tr><td>MALAYSIA SIANG</td></tr>
+      <tr><td>MALAYSIA</td></tr>
+      <tr><td>MACAU</td></tr>
+      <tr><td>SINGAPORE</td></tr>
+      <tr><td>HK LOTTO</td></tr>
+      <tr><td>SYDNEY LOTTO</td></tr>
+      <tr><td>TAIWAN</td></tr>
+      <tr><td>QATAR</td></tr>
+    </tbody>
+  </table>
 </div>
 
 <div class="provider-boxes">
@@ -460,7 +490,7 @@ function showHistory(){
   });
 }
 
-// --- Deposit & Withdraw ---
+// --- Deposit ---
 function konfirmasiDeposit(){
   if(!currentUser){alert("Login dulu!"); return;}
   const amt=parseInt(document.getElementById("depositAmount").value);
@@ -468,31 +498,36 @@ function konfirmasiDeposit(){
   db.collection("history").add({user:currentUser.id,type:"Deposit",amount:amt,status:"Pending",date:new Date()})
   .then(()=>{alert("Deposit tercatat, tunggu konfirmasi.");});
 }
-function showWithdraw(){ if(!currentUser){alert("Login dulu!"); return;} showPage("withdraw"); }
+
+// --- Withdraw ---
+function showWithdraw(){
+  if(!currentUser){alert("Login dulu!"); return;}
+  showPage("withdraw");
+}
 function konfirmasiWithdraw(){
   if(!currentUser){alert("Login dulu!"); return;}
   const amt=parseInt(document.getElementById("withdrawAmount").value);
   if(isNaN(amt)||amt<=0){alert("Nominal tidak valid!"); return;}
+  if(amt>currentUser.balance){alert("Saldo tidak cukup!"); return;}
   db.collection("history").add({user:currentUser.id,type:"Withdraw",amount:amt,status:"Pending",date:new Date()})
-  .then(()=>{alert("Withdraw tercatat, tunggu konfirmasi.");});
+  .then(()=>{alert("Withdraw tercatat, tunggu proses.");});
 }
 
-// --- Game Type Selector & Provider Click ---
-let selectedGameType = "slot";
+// --- Game Type Selection ---
 document.querySelectorAll(".game-type-card").forEach(el=>{
   el.addEventListener("click",()=>{
-    document.querySelectorAll(".game-type-card").forEach(e=>e.classList.remove("active"));
+    document.querySelectorAll(".game-type-card").forEach(c=>c.classList.remove("active"));
     el.classList.add("active");
-    selectedGameType = el.dataset.type;
-    const providerBoxes = document.querySelector(".provider-boxes");
-    const gameGrid = document.getElementById("gameGrid");
-    if(selectedGameType==="slot"){ providerBoxes.style.display="grid"; }
-    else { providerBoxes.style.display="none"; gameGrid.innerHTML=""; }
+    const type=el.getAttribute("data-type");
+    document.getElementById("togelTable").style.display=(type==="togel")?"block":"none";
+    document.querySelector(".provider-boxes").style.display=(type!=="togel")?"grid":"none";
+    document.getElementById("gameGrid").innerHTML="";
   });
 });
-document.querySelector(`.game-type-card[data-type="${selectedGameType}"]`).classList.add("active");
-document.querySelectorAll(".provider-card").forEach(el=>{
-  el.addEventListener("click",()=>{ if(selectedGameType==="slot") showGames(el.textContent); });
+
+// --- Provider Click ---
+document.querySelectorAll(".provider-card").forEach(pc=>{
+  pc.addEventListener("click",()=>showGames(pc.innerText));
 });
 </script>
 </body>
