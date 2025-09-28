@@ -54,7 +54,7 @@ header { background:#111a33; padding:10px 20px; display:flex; justify-content:sp
 .page { display:none; opacity:0; transform:translateY(20px); transition:all 0.6s ease; max-width:900px; margin:0 auto; padding:20px; }
 .active { display:block; opacity:1; transform:translateY(0); }
 
-/* ---------------- FORM BOXES HITAM + KUNING NEON ---------------- */
+/* FORM BOX */
 .form-box input,
 .form-box select,
 .form-box button {
@@ -110,9 +110,40 @@ header { background:#111a33; padding:10px 20px; display:flex; justify-content:sp
 
 #qrisImage { width:250px; max-width:80%; height:auto; display:block; margin:15px auto; border-radius:8px; }
 
+/* Footer menu (Bottom Navigation) */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #111a33;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 8px 0;
+  border-top: 2px solid #FFD700;
+  z-index: 200;
+}
+.bottom-nav a {
+  flex: 1;
+  text-align: center;
+  text-decoration: none;
+  color: #FFD700;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.bottom-nav img {
+  width: 22px;
+  height: 22px;
+  margin-bottom: 3px;
+  filter: invert(84%) sepia(68%) saturate(553%) hue-rotate(2deg) brightness(104%) contrast(104%);
+}
+.bottom-nav a:hover { color: #ff4444; }
+
 @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
 @keyframes fadeInUp { from {opacity:0; transform:translateY(40px);} to {opacity:1; transform:translateY(0);} }
-@keyframes fadeInDown { from {opacity:0; transform:translateY(-40px);} to {opacity:1; transform:translateY(0);} }
 
 @media (max-width:768px) {
   header { flex-direction:column; align-items:flex-start; }
@@ -151,7 +182,7 @@ header { background:#111a33; padding:10px 20px; display:flex; justify-content:sp
   </div>
 </header>
 <div class="banner">
-  <h1>🎉 WELCOME TO JOKOWI‑TOTO 🎉</h1>
+  <h1>🎉 WELCOME TO JOKOWI-TOTO 🎉</h1>
   <p class="small">Situs terbaik di Asia • Aman & 100% Resmi</p>
   <button class="btn-main" onclick="alert('Fitur Main Sekarang belum aktif')">Main Sekarang</button>
   <img src="https://raw.githubusercontent.com/reyreygits/ariptoto11/8c6b6bc656f69037edc448d4997d0d9d784e8711/poto.png2" alt="Banner Image" class="center-image" />
@@ -255,6 +286,30 @@ header { background:#111a33; padding:10px 20px; display:flex; justify-content:sp
 </div>
 </div>
 
+<!-- Bottom Navigation -->
+<nav class="bottom-nav">
+  <a href="#" onclick="showPage('home')">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/home.png" alt="Home"/>
+    <span>Beranda</span>
+  </a>
+  <a href="#" onclick="alert('Promo belum tersedia')">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/megaphone.png" alt="Promo"/>
+    <span>Promosi</span>
+  </a>
+  <a href="#" onclick="alert('Event belum tersedia')">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Event"/>
+    <span>Event</span>
+  </a>
+  <a href="https://wa.me/6282128009210" target="_blank">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/chat.png" alt="Chat"/>
+    <span>Chat</span>
+  </a>
+  <a href="https://wa.me/6282128009210" target="_blank">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/online-support.png" alt="Livechat"/>
+    <span>Livechat</span>
+  </a>
+</nav>
+
 <script>
 // --- Game List & Provider ---
 const providerGames = {
@@ -300,168 +355,98 @@ const providerGames = {
   ]
 };
 
-function populateGameGridByProvider(providerName) {
-  const container = document.getElementById('gameGrid');
-  container.innerHTML = '';
-  const gamesToShow = providerGames[providerName] || [];
-  gamesToShow.forEach(game => {
-    const card = document.createElement('div');
-    card.classList.add('game-card');
-    card.title = game.name;
-    card.innerHTML = `<img src="${game.img}" alt="${game.name}" /><div>${game.name}</div>`;
-    card.onclick = () => alert(`Deposit dulu untuk main: ${game.name}`);
-    container.appendChild(card);
+function showGames(provider){
+  const gameGrid=document.getElementById("gameGrid");
+  gameGrid.innerHTML="";
+  if(providerGames[provider]){
+    providerGames[provider].forEach(g=>{
+      const div=document.createElement("div");
+      div.className="game-card";
+      div.innerHTML=`<img src="${g.img}" alt="${g.name}"/><div>${g.name}</div>`;
+      gameGrid.appendChild(div);
+    });
+  }
+}
+document.querySelectorAll(".provider-card").forEach(el=>{
+  el.addEventListener("click",()=>showGames(el.textContent));
+});
+
+// --- Page Navigation ---
+function showPage(id){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+// --- Auth & Register ---
+function login(){
+  const u=document.getElementById("userLogin").value;
+  const p=document.getElementById("passLogin").value;
+  if(!u||!p){alert("Isi semua field!"); return;}
+  db.collection("users").doc(u).get().then(doc=>{
+    if(doc.exists && doc.data().password===p){
+      currentUser={id:u,...doc.data()};
+      showPage("userarea"); updateUserInfo();
+    } else {alert("Login gagal!");}
+  });
+}
+function logout(){currentUser=null; showPage("home");}
+function register(){
+  const u=document.getElementById("newUser").value;
+  const p=document.getElementById("newPass").value;
+  const r=document.getElementById("rekNum").value;
+  const n=document.getElementById("rekName").value;
+  const ph=document.getElementById("phoneNum").value;
+  const b=document.getElementById("bankType").value;
+  if(!u||!p||!r||!n||!ph||!b){alert("Lengkapi semua field!"); return;}
+  db.collection("users").doc(u).set({password:p,rekening:r,nama:n,phone:ph,bank:b,balance:0})
+  .then(()=>{alert("Pendaftaran berhasil! Silakan login."); showPage("home");});
+}
+function updateUserInfo(){
+  if(currentUser){
+    document.getElementById("userData").innerText=`User: ${currentUser.id} | Balance: Rp ${currentUser.balance}`;
+    document.getElementById("bankData").innerText=`Bank/E-Wallet: ${currentUser.bank} - ${currentUser.rekening}`;
+    document.getElementById("phoneData").innerText=`HP: ${currentUser.phone}`;
+    document.getElementById("withdrawRekening").innerText=`No Rekening: ${currentUser.rekening}`;
+    document.getElementById("withdrawNama").innerText=`Atas Nama: ${currentUser.nama}`;
+  }
+}
+
+// --- History ---
+function showHistory(){
+  if(!currentUser){alert("Login dulu!"); return;}
+  db.collection("history").where("user","==",currentUser.id).get().then(snap=>{
+    const list=document.getElementById("historyList");
+    list.innerHTML="";
+    snap.forEach(doc=>{
+      const d=doc.data();
+      const div=document.createElement("div");
+      div.innerText=`${d.type}: Rp ${d.amount} (${d.status})`;
+      list.appendChild(div);
+    });
   });
 }
 
-document.querySelectorAll('.provider-card').forEach(el => {
-  const providerName = el.textContent.trim();
-  el.onclick = () => populateGameGridByProvider(providerName);
-});
-
-function showPage(pageId) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById(pageId).classList.add('active');
+// --- Deposit ---
+function konfirmasiDeposit(){
+  if(!currentUser){alert("Login dulu!"); return;}
+  const amt=parseInt(document.getElementById("depositAmount").value);
+  if(isNaN(amt)||amt<=0){alert("Nominal tidak valid!"); return;}
+  db.collection("history").add({user:currentUser.id,type:"Deposit",amount:amt,status:"Pending",date:new Date()})
+  .then(()=>{alert("Deposit tercatat, tunggu konfirmasi.");});
 }
 
-async function login() {
-  const user = document.getElementById('userLogin').value.trim();
-  const pass = document.getElementById('passLogin').value;
-  if (!user || !pass) { alert('Isi User & Password'); return; }
-
-  try {
-    const docRef = db.collection('users').doc(user);
-    const docSnap = await docRef.get();
-    if (!docSnap.exists) { alert('User tidak ditemukan'); return; }
-    const data = docSnap.data();
-    if (data.password !== pass) { alert('Password salah'); return; }
-    currentUser = { ...data, user };
-
-    db.collection('users').doc(user).onSnapshot(doc => {
-      const data2 = doc.data();
-      if (!data2) return;
-      currentUser = { ...data2, user };
-      document.getElementById('userData').innerText = `User: ${user} | Balance: Rp ${currentUser.balance || 0}`;
-      document.getElementById('bankData').innerText = `Bank: ${data2.namaRekening || '-'} (${data2.bank || '-'})`;
-      document.getElementById('phoneData').innerText = `HP: ${data2.phone || '-'}`;
-
-      const historyDiv = document.getElementById('historyList');
-      historyDiv.innerHTML = '';
-      db.collection('deposits').where('user','==',user).orderBy('createdAt','desc').limit(10).get().then(snap => {
-        snap.forEach(d => {
-          const dd = d.data();
-          const dateStr = dd.createdAt && dd.createdAt.toDate ? dd.createdAt.toDate().toLocaleString() : (dd.createdAt || '');
-          historyDiv.innerHTML += `<div>Deposit Rp ${dd.amount} - ${dd.status} - ${dateStr}</div>`;
-        });
-      });
-      db.collection('withdraws').where('user','==',user).orderBy('createdAt','desc').limit(10).get().then(snap => {
-        snap.forEach(d => {
-          const dd = d.data();
-          const dateStr = dd.createdAt && dd.createdAt.toDate ? dd.createdAt.toDate().toLocaleString() : (dd.createdAt || '');
-          historyDiv.innerHTML += `<div>Withdraw Rp ${dd.amount} - ${dd.status} - ${dateStr}</div>`;
-        });
-      });
-    });
-
-    showPage('userarea');
-  } catch (err) {
-    console.error(err);
-    alert('Gagal login');
-  }
+// --- Withdraw ---
+function showWithdraw(){
+  if(!currentUser){alert("Login dulu!"); return;}
+  showPage("withdraw");
 }
-
-async function register() {
-  const user = document.getElementById('newUser').value.trim();
-  const pass = document.getElementById('newPass').value;
-  const rekening = document.getElementById('rekNum').value.trim();
-  const namaRekening = document.getElementById('rekName').value.trim();
-  const phone = document.getElementById('phoneNum').value.trim();
-  const bank = document.getElementById('bankType').value;
-
-  if (!user || !pass || !rekening || !namaRekening || !phone || !bank) {
-    alert('Isi semua field');
-    return;
-  }
-
-  try {
-    const docSnap = await db.collection('users').doc(user).get();
-    if (docSnap.exists) { alert('User sudah terdaftar'); return; }
-    await db.collection('users').doc(user).set({
-      password: pass,
-      namaRekening,
-      rekening,
-      bank,
-      phone,
-      balance: 0,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    alert('Akun berhasil didaftarkan');
-    showPage('home');
-  } catch (err) {
-    console.error(err);
-    alert('Gagal daftar');
-  }
-}
-
-function logout() {
-  currentUser = null;
-  alert('Logout berhasil');
-  showPage('home');
-}
-
-function showWithdraw() {
-  if (!currentUser) { alert('Login dulu'); return; }
-  document.getElementById('withdrawRekening').innerText = `Rek: ${currentUser.rekening || '-'} (${currentUser.bank || '-'})`;
-  document.getElementById('withdrawNama').innerText = `User: ${currentUser.user}`;
-  showPage('withdraw');
-}
-
-async function konfirmasiDeposit() {
-  if (!currentUser) { alert('Login dulu'); return; }
-  const amt = parseInt(document.getElementById('depositAmount').value);
-  if (!amt || amt <= 0) { alert('Masukkan nominal'); return; }
-
-  try {
-    await db.collection('deposits').add({
-      user: currentUser.user,
-      amount: amt,
-      status: 'pending',
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    alert(`Deposit Rp ${amt} dicatat. Tunggu approval admin.`);
-    showPage('userarea');
-  } catch (err) {
-    console.error(err);
-    alert('Gagal mencatat deposit');
-  }
-}
-
-async function konfirmasiWithdraw() {
-  if (!currentUser) { alert('Login dulu'); return; }
-  const amt = parseInt(document.getElementById('withdrawAmount').value);
-  if (!amt || amt <= 0) { alert('Masukkan nominal'); return; }
-  if (amt > (currentUser.balance || 0)) { alert('Saldo tidak cukup'); return; }
-
-  try {
-    await db.collection('withdraws').add({
-      user: currentUser.user,
-      amount: amt,
-      status: 'pending',
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    alert(`Withdraw Rp ${amt} dicatat. Tunggu approval admin.`);
-    showPage('userarea');
-  } catch (err) {
-    console.error(err);
-    alert('Gagal mencatat withdraw');
-  }
-}
-
-function showHistory() {
-  if (!currentUser) { alert('Login dulu'); return; }
-  showPage('userarea');
+function konfirmasiWithdraw(){
+  if(!currentUser){alert("Login dulu!"); return;}
+  const amt=parseInt(document.getElementById("withdrawAmount").value);
+  if(isNaN(amt)||amt<=0){alert("Nominal tidak valid!"); return;}
+  db.collection("history").add({user:currentUser.id,type:"Withdraw",amount:amt,status:"Pending",date:new Date()})
+  .then(()=>{alert("Withdraw tercatat, tunggu konfirmasi.");});
 }
 </script>
-
 </body>
 </html>
