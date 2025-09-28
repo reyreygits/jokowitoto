@@ -108,6 +108,35 @@ header { background:#111a33; padding:10px 20px; display:flex; justify-content:sp
 .game-card:hover { transform:translateY(-6px) scale(1.03); box-shadow:0 8px 20px rgba(255,215,0,0.6); }
 .game-card img { width:100%; border-radius:6px; margin-bottom:8px; }
 
+/* Kotak Togel / Slot / Casino */
+.menu-game-type {
+  display:flex;
+  gap:15px;
+  justify-content:center;
+  margin-top:20px;
+  flex-wrap:wrap;
+}
+.game-type-card {
+  padding:10px 20px;
+  background:#2a2a2a;
+  color:#FFD700;
+  font-weight:bold;
+  border-radius:8px;
+  text-align:center;
+  cursor:pointer;
+  box-shadow:0 4px 12px rgba(255,215,0,0.3);
+  transition:all 0.3s ease;
+  user-select:none;
+}
+.game-type-card:hover {
+  transform:scale(1.05);
+  box-shadow:0 6px 18px rgba(255,215,0,0.6);
+}
+.game-type-card.active {
+  background:#FFD700;
+  color:#111;
+}
+
 #qrisImage { width:250px; max-width:80%; height:auto; display:block; margin:15px auto; border-radius:8px; }
 
 /* Footer menu (Bottom Navigation) */
@@ -246,6 +275,13 @@ header { background:#111a33; padding:10px 20px; display:flex; justify-content:sp
 </div>
 </div>
 
+<!-- Game Type Selector -->
+<div class="menu-game-type">
+  <div class="game-type-card" data-type="slot">🎰 Slot</div>
+  <div class="game-type-card" data-type="togel">🎲 Togel</div>
+  <div class="game-type-card" data-type="casino">🎮 Casino</div>
+</div>
+
 <div class="provider-boxes">
 <div class="provider-card">Pragmatic</div>
 <div class="provider-card">PG Soft</div>
@@ -355,6 +391,7 @@ const providerGames = {
   ]
 };
 
+// --- Game Grid ---
 function showGames(provider){
   const gameGrid=document.getElementById("gameGrid");
   gameGrid.innerHTML="";
@@ -367,9 +404,6 @@ function showGames(provider){
     });
   }
 }
-document.querySelectorAll(".provider-card").forEach(el=>{
-  el.addEventListener("click",()=>showGames(el.textContent));
-});
 
 // --- Page Navigation ---
 function showPage(id){
@@ -447,6 +481,28 @@ function konfirmasiWithdraw(){
   db.collection("history").add({user:currentUser.id,type:"Withdraw",amount:amt,status:"Pending",date:new Date()})
   .then(()=>{alert("Withdraw tercatat, tunggu konfirmasi.");});
 }
+
+// --- Game Type Selector ---
+let selectedGameType = "slot"; // default
+document.querySelectorAll(".game-type-card").forEach(el=>{
+  el.addEventListener("click",()=>{
+    document.querySelectorAll(".game-type-card").forEach(e=>e.classList.remove("active"));
+    el.classList.add("active");
+    selectedGameType = el.dataset.type;
+    const providerBoxes = document.querySelector(".provider-boxes");
+    const gameGrid = document.getElementById("gameGrid");
+    if(selectedGameType==="slot"){ providerBoxes.style.display="grid"; }
+    else { providerBoxes.style.display="none"; gameGrid.innerHTML=""; }
+  });
+});
+document.querySelector(`.game-type-card[data-type="${selectedGameType}"]`).classList.add("active");
+
+// --- Provider click only for slot ---
+document.querySelectorAll(".provider-card").forEach(el=>{
+  el.addEventListener("click",()=>{
+    if(selectedGameType==="slot") showGames(el.textContent);
+  });
+});
 </script>
 </body>
 </html>
