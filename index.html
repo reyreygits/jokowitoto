@@ -275,30 +275,21 @@ header { background:#111a33; padding:10px 20px; display:flex; justify-content:sp
 </div>
 </div>
 
-<!-- Slot/Togel/Casino Selector -->
-<div class="game-types">
-  <div class="game-type-card active" data-type="slot">🎰 Slot</div>
-  <div class="game-type-card" data-type="togel">🎯 Togel</div>
-  <div class="game-type-card" data-type="casino">🎲 Casino</div>
+<!-- Game Type Selector -->
+<div class="menu-game-type">
+  <div class="game-type-card" data-type="slot">🎰 Slot</div>
+  <div class="game-type-card" data-type="togel">🎲 Togel</div>
+  <div class="game-type-card" data-type="casino">🎮 Casino</div>
 </div>
 
-<!-- Slot Horizontal Scroll -->
-<div class="game-scroll" id="slotGames"></div>
-
-<!-- Togel Horizontal Scroll -->
-<div class="game-scroll" id="togelGames" style="display:none;">
-  <div class="game-card"><div>Togel 1</div></div>
-  <div class="game-card"><div>Togel 2</div></div>
-  <div class="game-card"><div>Togel 3</div></div>
+<div class="provider-boxes">
+<div class="provider-card">Pragmatic</div>
+<div class="provider-card">PG Soft</div>
+<div class="provider-card">No Limit</div>
+<div class="provider-card">jili</div>
 </div>
 
-<!-- Casino Horizontal Scroll -->
-<div class="game-scroll" id="casinoGames" style="display:none;">
-  <div class="game-card"><div>Casino 1</div></div>
-  <div class="game-card"><div>Casino 2</div></div>
-  <div class="game-card"><div>Casino 3</div></div>
-</div>
-
+<div class="game-grid" id="gameGrid"></div>
 </div>
 </div>
 
@@ -400,46 +391,109 @@ const providerGames = {
   ]
 };
 
-// --- Show Slot Games ---
-function showSlotGames(provider){
-  const slotWrapper = document.getElementById('slotGames');
-  slotWrapper.innerHTML='';
+// --- Game Grid ---
+function showGames(provider){
+  const gameGrid=document.getElementById("gameGrid");
+  gameGrid.innerHTML="";
   if(providerGames[provider]){
     providerGames[provider].forEach(g=>{
-      const div = document.createElement('div');
-      div.className='game-card';
-      div.innerHTML=`<img src="${g.img}" /><div>${g.name}</div>`;
-      slotWrapper.appendChild(div);
+      const div=document.createElement("div");
+      div.className="game-card";
+      div.innerHTML=`<img src="${g.img}" alt="${g.name}"/><div>${g.name}</div>`;
+      gameGrid.appendChild(div);
     });
   }
 }
 
-// --- Game Type Selector ---
-const gameTypes = document.querySelectorAll('.game-type-card');
-gameTypes.forEach(card=>{
-  card.addEventListener('click',()=>{
-    gameTypes.forEach(c=>c.classList.remove('active'));
-    card.classList.add('active');
-    const type = card.dataset.type;
-    document.getElementById('slotGames').style.display = type==='slot'?'flex':'none';
-    document.getElementById('togelGames').style.display = type==='togel'?'flex':'none';
-    document.getElementById('casinoGames').style.display = type==='casino'?'flex':'none';
+// --- Page Navigation ---
+function showPage(id){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+// --- Auth & Register ---
+function login(){
+  const u=document.getElementById("userLogin").value;
+  const p=document.getElementById("passLogin").value;
+  if(!u||!p){alert("Isi semua field!"); return;}
+  db.collection("users").doc(u).get().then(doc=>{
+    if(doc.exists && doc.data().password===p){
+      currentUser={id:u,...doc.data()};
+      showPage("userarea"); updateUserInfo();
+    } else {alert("Login gagal!");}
+  });
+}
+function logout(){currentUser=null; showPage("home");}
+function register(){
+  const u=document.getElementById("newUser").value;
+  const p=document.getElementById("newPass").value;
+  const r=document.getElementById("rekNum").value;
+  const n=document.getElementById("rekName").value;
+  const ph=document.getElementById("phoneNum").value;
+  const b=document.getElementById("bankType").value;
+  if(!u||!p||!r||!n||!ph||!b){alert("Lengkapi semua field!"); return;}
+  db.collection("users").doc(u).set({password:p,rekening:r,nama:n,phone:ph,bank:b,balance:0})
+  .then(()=>{alert("Pendaftaran berhasil! Silakan login."); showPage("home");});
+}
+function updateUserInfo(){
+  if(currentUser){
+    document.getElementById("userData").innerText=`User: ${currentUser.id} | Balance: Rp ${currentUser.balance}`;
+    document.getElementById("bankData").innerText=`Bank/E-Wallet: ${currentUser.bank} - ${currentUser.rekening}`;
+    document.getElementById("phoneData").innerText=`HP: ${currentUser.phone}`;
+    document.getElementById("withdrawRekening").innerText=`No Rekening: ${currentUser.rekening}`;
+    document.getElementById("withdrawNama").innerText=`Atas Nama: ${currentUser.nama}`;
+  }
+}
+
+// --- History ---
+function showHistory(){
+  if(!currentUser){alert("Login dulu!"); return;}
+  db.collection("history").where("user","==",currentUser.id).get().then(snap=>{
+    const list=document.getElementById("historyList");
+    list.innerHTML="";
+    snap.forEach(doc=>{
+      const d=doc.data();
+      const div=document.createElement("div");
+      div.innerText=`${d.type}: Rp ${d.amount} (${d.status})`;
+      list.appendChild(div);
+    });
+  });
+}
+
+// --- Deposit & Withdraw ---
+function konfirmasiDeposit(){
+  if(!currentUser){alert("Login dulu!"); return;}
+  const amt=parseInt(document.getElementById("depositAmount").value);
+  if(isNaN(amt)||amt<=0){alert("Nominal tidak valid!"); return;}
+  db.collection("history").add({user:currentUser.id,type:"Deposit",amount:amt,status:"Pending",date:new Date()})
+  .then(()=>{alert("Deposit tercatat, tunggu konfirmasi.");});
+}
+function showWithdraw(){ if(!currentUser){alert("Login dulu!"); return;} showPage("withdraw"); }
+function konfirmasiWithdraw(){
+  if(!currentUser){alert("Login dulu!"); return;}
+  const amt=parseInt(document.getElementById("withdrawAmount").value);
+  if(isNaN(amt)||amt<=0){alert("Nominal tidak valid!"); return;}
+  db.collection("history").add({user:currentUser.id,type:"Withdraw",amount:amt,status:"Pending",date:new Date()})
+  .then(()=>{alert("Withdraw tercatat, tunggu konfirmasi.");});
+}
+
+// --- Game Type Selector & Provider Click ---
+let selectedGameType = "slot";
+document.querySelectorAll(".game-type-card").forEach(el=>{
+  el.addEventListener("click",()=>{
+    document.querySelectorAll(".game-type-card").forEach(e=>e.classList.remove("active"));
+    el.classList.add("active");
+    selectedGameType = el.dataset.type;
+    const providerBoxes = document.querySelector(".provider-boxes");
+    const gameGrid = document.getElementById("gameGrid");
+    if(selectedGameType==="slot"){ providerBoxes.style.display="grid"; }
+    else { providerBoxes.style.display="none"; gameGrid.innerHTML=""; }
   });
 });
-
-// Default Slot Show
-showSlotGames('Pragmatic');
-
-// --- Page Navigation & Auth/Register/Deposit/Withdraw (tetap sama) ---
-function showPage(id){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.getElementById(id).classList.add("active");}
-function login(){const u=document.getElementById("userLogin").value;const p=document.getElementById("passLogin").value;if(!u||!p){alert("Isi semua field!");return;}db.collection("users").doc(u).get().then(doc=>{if(doc.exists && doc.data().password===p){currentUser={id:u,...doc.data()};showPage("userarea");updateUserInfo();}else{alert("Login gagal!");}});}
-function logout(){currentUser=null; showPage("home");}
-function register(){const u=document.getElementById("newUser").value;const p=document.getElementById("newPass").value;const r=document.getElementById("rekNum").value;const n=document.getElementById("rekName").value;const ph=document.getElementById("phoneNum").value;const b=document.getElementById("bankType").value;if(!u||!p||!r||!n||!ph||!b){alert("Lengkapi semua field!"); return;}db.collection("users").doc(u).set({password:p,rekening:r,nama:n,phone:ph,bank:b,balance:0}).then(()=>{alert("Pendaftaran berhasil! Silakan login."); showPage("home");});}
-function updateUserInfo(){if(currentUser){document.getElementById("userData").innerText=`User: ${currentUser.id} | Balance: Rp ${currentUser.balance}`;document.getElementById("bankData").innerText=`Bank/E-Wallet: ${currentUser.bank} - ${currentUser.rekening}`;document.getElementById("phoneData").innerText=`HP: ${currentUser.phone}`;document.getElementById("withdrawRekening").innerText=`No Rekening: ${currentUser.rekening}`;document.getElementById("withdrawNama").innerText=`Atas Nama: ${currentUser.nama}`;}}
-function showHistory(){if(!currentUser){alert("Login dulu!"); return;}db.collection("history").where("user","==",currentUser.id).get().then(snap=>{const list=document.getElementById("historyList");list.innerHTML="";snap.forEach(doc=>{const d=doc.data();const div=document.createElement("div");div.innerText=`${d.type}: Rp ${d.amount} (${d.status})`;list.appendChild(div);});});}
-function konfirmasiDeposit(){if(!currentUser){alert("Login dulu!"); return;}const amt=parseInt(document.getElementById("depositAmount").value);if(isNaN(amt)||amt<=0){alert("Nominal tidak valid!"); return;}db.collection("history").add({user:currentUser.id,type:"Deposit",amount:amt,status:"Pending",date:new Date()}).then(()=>{alert("Deposit tercatat, tunggu konfirmasi.");});}
-function showWithdraw(){if(!currentUser){alert("Login dulu!"); return;}showPage("withdraw");}
-function konfirmasiWithdraw(){if(!currentUser){alert("Login dulu!"); return;}const amt=parseInt(document.getElementById("withdrawAmount").value);if(isNaN(amt)||amt<=0){alert("Nominal tidak valid!"); return;}db.collection("history").add({user:currentUser.id,type:"Withdraw",amount:amt,status:"Pending",date:new Date()}).then(()=>{alert("Withdraw tercatat, tunggu konfirmasi.");});}
+document.querySelector(`.game-type-card[data-type="${selectedGameType}"]`).classList.add("active");
+document.querySelectorAll(".provider-card").forEach(el=>{
+  el.addEventListener("click",()=>{ if(selectedGameType==="slot") showGames(el.textContent); });
+});
 </script>
 </body>
 </html>
