@@ -495,8 +495,19 @@ function konfirmasiDeposit(){
   if(!currentUser){alert("Login dulu!"); return;}
   const amt=parseInt(document.getElementById("depositAmount").value);
   if(isNaN(amt)||amt<=0){alert("Nominal tidak valid!"); return;}
-  db.collection("history").add({user:currentUser.id,type:"Deposit",amount:amt,status:"Pending",date:new Date()})
-  .then(()=>{alert("Deposit tercatat, tunggu konfirmasi.");});
+  db.collection("history").add({
+    user: currentUser.id,
+    type: "Deposit",
+    amount: amt,
+    status: "Pending",
+    date: new Date()
+  }).then(()=>{
+    alert("💛 Deposit sedang diproses admin. Harap hubungi Live Chat untuk konfirmasi.");
+    document.getElementById("depositAmount").value="";
+  }).catch(err=>{
+    console.error(err);
+    alert("Terjadi kesalahan, coba lagi!");
+  });
 }
 
 // --- Withdraw ---
