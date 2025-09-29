@@ -25,36 +25,27 @@ let currentUser = null;
 </script>
 
 <style>
+/* --- Styles sama seperti HTML kamu sebelumnya --- */
 body { margin:0; font-family:Arial,sans-serif; background:#0a0f1c; color:white; overflow-x:hidden; }
 header { background:#111a33; padding:10px 20px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:100; box-shadow:0 4px 12px rgba(0,0,0,0.4); flex-wrap:wrap; }
 .logo { flex-shrink:0; }
 .logo img { max-height:100px; vertical-align: middle; }
-
-/* Login form kecil */
 .login-form { display:flex; gap:6px; flex-wrap:wrap; flex-grow:1; justify-content:flex-end; }
 .login-form input { padding:4px 6px; border-radius:4px; border:none; outline:none; min-width:80px; max-width:120px; font-size:12px; }
 .login-form button { padding:4px 8px; border:none; border-radius:4px; cursor:pointer; font-weight:bold; font-size:12px; max-width:100px; transition:all 0.3s ease; }
 .btn-login { background:#ff4444; color:white; }
 .btn-daftar { background:#00cc66; color:white; }
 .login-form button:hover { transform:scale(1.05); opacity:0.9; }
-
-/* WhatsApp kecil */
 .btn-wa { display:inline-block; margin-top:6px; padding:6px 12px; background:#25D366; color:white; font-weight:bold; border-radius:6px; text-decoration:none; transition:all 0.3s ease; font-size:12px; }
 .btn-wa:hover { background:#1ebe5d; transform:scale(1.05); }
-
-/* Banner */
 .banner { max-width:900px; margin:30px auto; padding:50px 20px; border-radius:15px; background:linear-gradient(135deg,#1e3c72,#2a5298); box-shadow:0 5px 20px rgba(0,0,0,0.6); text-align:center; animation:fadeInUp 1s ease; }
 .banner h1 { font-size:40px; margin-bottom:15px; color:#FFD700; animation:fadeIn 2s ease; }
 .banner p { font-size:20px; color:#ddd; animation:fadeIn 2.5s ease; }
 .btn-main { margin-top:20px; padding:12px 25px; font-size:18px; border:none; border-radius:8px; cursor:pointer; background:#ffcc00; color:black; font-weight:bold; transition:0.3s; max-width:300px; width:100%; }
 .btn-main:hover { background:#ffaa00; transform:scale(1.05); }
 .center-image { margin-top:30px; max-width:80%; border-radius:8px; height:auto; display:block; margin-left:auto; margin-right:auto; }
-
-/* Page */
 .page { display:none; opacity:0; transform:translateY(20px); transition:all 0.6s ease; max-width:900px; margin:0 auto; padding:20px; }
 .active { display:block; opacity:1; transform:translateY(0); }
-
-/* FORM BOX */
 .form-box input,
 .form-box select,
 .form-box button {
@@ -87,64 +78,28 @@ header { background:#111a33; padding:10px 20px; display:flex; justify-content:sp
 .form-box { background:#0a0a0a; padding:25px; border-radius:16px; max-width:400px; margin:30px auto; box-shadow:0 8px 25px rgba(255,215,0,0.2); text-align:center; }
 .form-box h2 { color:#FFD700; margin-bottom:20px; }
 .form-box label { display:block; text-align:left; margin-top:10px; color:#FFD700; font-weight:bold; font-size:14px; }
-
-/* User area */
 #userarea header { flex-wrap:wrap; }
 #userarea .menu { display:flex; gap:15px; flex-wrap:wrap; color:#FFD700; font-weight:bold; }
 #userarea .menu a { color:#FFD700; text-decoration:none; cursor:pointer; transition:color 0.3s ease; user-select:none; }
 #userarea .menu a:hover { color:#ff4444; }
-
 .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:15px; }
 .card { background:#2a2a2a; border-radius:8px; padding:15px; box-shadow:0 6px 15px rgba(0,0,0,0.4); transition:transform 0.3s ease; }
 .card:hover { transform:translateY(-5px); }
 .card h3 { margin-top:0; color:#ff4444; }
-
 .provider-boxes { display:grid; grid-template-columns:repeat(4,1fr); gap:15px; margin-top:30px; }
 .provider-card { background:#2a2a2a; padding:20px; border-radius:8px; text-align:center; font-weight:bold; color:#FFD700; box-shadow:0 6px 15px rgba(255,215,0,0.4); user-select:none; cursor:pointer; transition:transform 0.3s ease; }
 .provider-card:hover { transform:translateY(-5px) scale(1.05); box-shadow:0 8px 20px rgba(255,215,0,0.6); }
-
 .game-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:15px; margin-top:25px; }
 .game-card { background:#1e1e1e; border-radius:10px; padding:12px; text-align:center; font-weight:bold; color:#FFD700; box-shadow:0 4px 12px rgba(255,215,0,0.3); cursor:pointer; transition:transform 0.3s ease; user-select:none; }
 .game-card:hover { transform:translateY(-6px) scale(1.03); box-shadow:0 8px 20px rgba(255,215,0,0.6); }
 .game-card img { width:100%; border-radius:6px; margin-bottom:8px; }
-
 #qrisImage { width:250px; max-width:80%; height:auto; display:block; margin:15px auto; border-radius:8px; }
-
-/* Footer menu (Bottom Navigation) */
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #111a33;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 8px 0;
-  border-top: 2px solid #FFD700;
-  z-index: 200;
-}
-.bottom-nav a {
-  flex: 1;
-  text-align: center;
-  text-decoration: none;
-  color: #FFD700;
-  font-size: 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.bottom-nav img {
-  width: 22px;
-  height: 22px;
-  margin-bottom: 3px;
-  filter: invert(84%) sepia(68%) saturate(553%) hue-rotate(2deg) brightness(104%) contrast(104%);
-}
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #111a33; display: flex; justify-content: space-around; align-items: center; padding: 8px 0; border-top: 2px solid #FFD700; z-index: 200; }
+.bottom-nav a { flex: 1; text-align: center; text-decoration: none; color: #FFD700; font-size: 12px; display: flex; flex-direction: column; align-items: center; }
+.bottom-nav img { width: 22px; height: 22px; margin-bottom: 3px; filter: invert(84%) sepia(68%) saturate(553%) hue-rotate(2deg) brightness(104%) contrast(104%); }
 .bottom-nav a:hover { color: #ff4444; }
-
 @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
 @keyframes fadeInUp { from {opacity:0; transform:translateY(40px);} to {opacity:1; transform:translateY(0);} }
-
 @media (max-width:768px) {
   header { flex-direction:column; align-items:flex-start; }
   .login-form { flex-direction:column; width:100%; margin-top:10px; }
@@ -161,7 +116,6 @@ header { background:#111a33; padding:10px 20px; display:flex; justify-content:sp
   .form-box { width:90%; padding:20px; margin:20px auto; }
   #qrisImage { width:200px; max-width:90%; }
 }
-
 .small { font-size:13px; color:#ddd; }
 </style>
 </head>
@@ -354,8 +308,6 @@ const providerGames = {
     {name:"RAPID GEMS 777",img:"https://raw.githubusercontent.com/reyreygits/ariptoto11/main/rapid7.png"}
   ]
 };
-
-// --- Show Games ---
 function showGames(provider){
   const gameGrid=document.getElementById("gameGrid");
   gameGrid.innerHTML="";
@@ -386,11 +338,11 @@ function login(){
   db.collection("users").doc(u).get().then(doc=>{
     if(doc.exists && doc.data().password===p){
       currentUser={id:u,...doc.data()};
-      showPage("userarea"); subscribeBalance(); updateUserInfo();
+      showPage("userarea"); updateUserInfo();
     } else {alert("Login gagal!");}
   });
 }
-function logout(){currentUser=null; if(unsubscribeBalance) unsubscribeBalance(); showPage("home");}
+function logout(){currentUser=null; showPage("home");}
 function register(){
   const u=document.getElementById("newUser").value;
   const p=document.getElementById("newPass").value;
@@ -402,18 +354,6 @@ function register(){
   db.collection("users").doc(u).set({password:p,rekening:r,nama:n,phone:ph,bank:b,balance:0})
   .then(()=>{alert("Pendaftaran berhasil! Silakan login."); showPage("home");});
 }
-
-// --- Realtime User Info ---
-function subscribeBalance(){
-  if(!currentUser) return;
-  if(unsubscribeBalance) unsubscribeBalance();
-  unsubscribeBalance = db.collection("users").doc(currentUser.id)
-    .onSnapshot(doc=>{
-      currentUser = {id: currentUser.id, ...doc.data()};
-      updateUserInfo();
-    });
-}
-
 function updateUserInfo(){
   if(currentUser){
     document.getElementById("userData").innerText=`User: ${currentUser.id} | Balance: Rp ${currentUser.balance}`;
@@ -427,7 +367,7 @@ function updateUserInfo(){
 // --- History ---
 function showHistory(){
   if(!currentUser){alert("Login dulu!"); return;}
-  db.collection("history").where("user","==",currentUser.id).orderBy("date","desc").get().then(snap=>{
+  db.collection("history").where("user","==",currentUser.id).get().then(snap=>{
     const list=document.getElementById("historyList");
     list.innerHTML="";
     snap.forEach(doc=>{
@@ -439,25 +379,49 @@ function showHistory(){
   });
 }
 
-// --- Deposit ---
-function konfirmasiDeposit(){
-  if(!currentUser){alert("Login dulu!"); return;}
-  const amt=parseInt(document.getElementById("depositAmount").value);
-  if(isNaN(amt)||amt<=0){alert("Nominal tidak valid!"); return;}
-  db.collection("history").add({user:currentUser.id,type:"Deposit",amount:amt,status:"Pending",date:new Date()})
-  .then(()=>{alert("Deposit tercatat, tunggu konfirmasi."); document.getElementById("depositAmount").value='';});
-}
+// --- Deposit & Withdraw Fix (Event Listener setelah DOM) ---
+document.addEventListener("DOMContentLoaded", function() {
+  // Deposit
+  const depositBtn = document.querySelector("#deposit button[onclick='konfirmasiDeposit()']");
+  if(depositBtn){
+    depositBtn.addEventListener("click", function(){
+      if(!currentUser){ alert("Login dulu!"); return; }
+      const amt = parseInt(document.getElementById("depositAmount").value);
+      if(isNaN(amt) || amt <= 0){ alert("Nominal tidak valid!"); return; }
+      db.collection("history").add({
+        user: currentUser.id,
+        type: "Deposit",
+        amount: amt,
+        status: "Pending",
+        date: new Date()
+      }).then(()=>{ 
+        alert("Deposit tercatat, tunggu konfirmasi."); 
+        document.getElementById("depositAmount").value = '';
+      });
+    });
+  }
 
-// --- Withdraw ---
-function showWithdraw(){ if(!currentUser){alert("Login dulu!"); return;} showPage("withdraw"); }
-function konfirmasiWithdraw(){
-  if(!currentUser){alert("Login dulu!"); return;}
-  const amt=parseInt(document.getElementById("withdrawAmount").value);
-  if(isNaN(amt)||amt<=0){alert("Nominal tidak valid!"); return;}
-  if(amt>currentUser.balance){alert("Saldo tidak cukup!"); return;}
-  db.collection("history").add({user:currentUser.id,type:"Withdraw",amount:amt,status:"Pending",date:new Date()})
-  .then(()=>{alert("Withdraw tercatat, tunggu konfirmasi."); document.getElementById("withdrawAmount").value='';});
-}
+  // Withdraw
+  const withdrawBtn = document.querySelector("#withdraw button[onclick='konfirmasiWithdraw()']");
+  if(withdrawBtn){
+    withdrawBtn.addEventListener("click", function(){
+      if(!currentUser){ alert("Login dulu!"); return; }
+      const amt = parseInt(document.getElementById("withdrawAmount").value);
+      if(isNaN(amt) || amt <= 0){ alert("Nominal tidak valid!"); return; }
+      if(amt > currentUser.balance){ alert("Saldo tidak cukup!"); return; }
+      db.collection("history").add({
+        user: currentUser.id,
+        type: "Withdraw",
+        amount: amt,
+        status: "Pending",
+        date: new Date()
+      }).then(()=>{ 
+        alert("Withdraw tercatat, tunggu konfirmasi."); 
+        document.getElementById("withdrawAmount").value = '';
+      });
+    });
+  }
+});
 </script>
 </body>
 </html>
