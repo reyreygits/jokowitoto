@@ -25,44 +25,76 @@ let currentUser = null;
 </script>
 
 <style>
-/* === style lama tetap === */
-body { margin:0; font-family:Arial,sans-serif; background:#0a0f1c; color:white; overflow-x:hidden; }
-header { background:#111a33; padding:10px 20px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:100; box-shadow:0 4px 12px rgba(0,0,0,0.4); flex-wrap:wrap; }
-.logo { flex-shrink:0; }
-.logo img { max-height:100px; vertical-align: middle; }
+/* === Global === */
+body {
+  margin:0; font-family:Arial,sans-serif;
+  background:#0a0f1c; color:white;
+  overflow-x:hidden;
+}
+
+/* === Header === */
+header {
+  background:#111a33; padding:10px 20px;
+  display:flex; justify-content:space-between; align-items:center;
+  position:sticky; top:0; z-index:100;
+  box-shadow:0 4px 12px rgba(0,0,0,0.4);
+  flex-wrap:wrap;
+}
+.logo img { max-height:60px; height:auto; }
+
 .login-form { display:flex; gap:6px; flex-wrap:wrap; flex-grow:1; justify-content:flex-end; }
-.login-form input { padding:4px 6px; border-radius:4px; border:none; outline:none; min-width:80px; max-width:120px; font-size:12px; }
-.login-form button { padding:4px 8px; border:none; border-radius:4px; cursor:pointer; font-weight:bold; font-size:12px; max-width:100px; transition:all 0.3s ease; }
+.login-form input {
+  padding:6px; border-radius:4px; border:none; outline:none;
+  font-size:14px; flex:1 1 100px;
+}
+.login-form button {
+  padding:6px 10px; border:none; border-radius:4px;
+  cursor:pointer; font-weight:bold; font-size:14px;
+  transition:all 0.3s ease;
+}
 .btn-login { background:#ff4444; color:white; }
 .btn-daftar { background:#00cc66; color:white; }
 .login-form button:hover { transform:scale(1.05); opacity:0.9; }
-.btn-wa { display:inline-block; margin-top:6px; padding:6px 12px; background:#25D366; color:white; font-weight:bold; border-radius:6px; text-decoration:none; transition:all 0.3s ease; font-size:12px; }
-.btn-wa:hover { background:#1ebe5d; transform:scale(1.05); }
 
-/* Banner */
-.banner { max-width:900px; margin:30px auto; padding:50px 20px; border-radius:15px; background:linear-gradient(135deg,#1e3c72,#2a5298); box-shadow:0 5px 20px rgba(0,0,0,0.6); text-align:center; animation:fadeInUp 1s ease; }
-.banner h1 { font-size:40px; margin-bottom:15px; color:#FFD700; animation:fadeIn 2s ease; }
-.banner p { font-size:20px; color:#ddd; animation:fadeIn 2.5s ease; }
-.btn-main { margin-top:20px; padding:12px 25px; font-size:18px; border:none; border-radius:8px; cursor:pointer; background:#ffcc00; color:black; font-weight:bold; transition:0.3s; max-width:300px; width:100%; }
-.btn-main:hover { background:#ffaa00; transform:scale(1.05); }
-.center-image { margin-top:30px; max-width:80%; border-radius:8px; height:auto; display:block; margin-left:auto; margin-right:auto; }
+.btn-wa {
+  display:inline-block; margin-top:6px; padding:6px 12px;
+  background:#25D366; color:white; font-weight:bold;
+  border-radius:6px; text-decoration:none; font-size:14px;
+}
+.btn-wa:hover { background:#1ebe5d; }
 
-/* === tambahan untuk running text === */
+/* === Banner === */
+.banner {
+  max-width:900px; margin:20px auto; padding:30px 20px;
+  border-radius:15px;
+  background:linear-gradient(135deg,#1e3c72,#2a5298);
+  box-shadow:0 5px 20px rgba(0,0,0,0.6);
+  text-align:center;
+}
+.banner h1 { font-size:28px; margin-bottom:10px; color:#FFD700; }
+.banner p { font-size:16px; color:#ddd; }
+.btn-main {
+  margin-top:15px; padding:10px 20px;
+  font-size:16px; border:none; border-radius:8px;
+  background:#ffcc00; color:black; font-weight:bold;
+  cursor:pointer; width:100%; max-width:250px;
+}
+.btn-main:hover { background:#ffaa00; }
+.center-image {
+  margin-top:20px; max-width:100%; border-radius:8px;
+  height:auto; display:block; margin-left:auto; margin-right:auto;
+}
+
+/* === Running Text === */
 #runningText {
-  background:#111a33;
-  color:#FFD700;
-  padding:10px;
-  margin:10px auto 0;
-  border-radius:6px;
-  font-weight:bold;
-  overflow:hidden;
-  white-space:nowrap;
+  background:#111a33; color:#FFD700;
+  padding:8px; margin:10px auto 0;
+  border-radius:6px; font-weight:bold;
+  overflow:hidden; white-space:nowrap;
   box-shadow:0 0 10px #000;
-  text-align:left;
 }
 #runningText span {
-  display:inline-block;
-  padding-left:100%;
+  display:inline-block; padding-left:100%;
   animation:marquee 15s linear infinite;
 }
 @keyframes marquee {
@@ -70,41 +102,124 @@ header { background:#111a33; padding:10px 20px; display:flex; justify-content:sp
   100% { transform:translateX(-100%); }
 }
 
-/* === style lama lainnya tetap === */
-.page { display:none; opacity:0; transform:translateY(20px); transition:all 0.6s ease; max-width:900px; margin:0 auto; padding:20px; }
-.active { display:block; opacity:1; transform:translateY(0); }
-/* ... semua style lama tetap tanpa dihapus ... */
-.small { font-size:13px; color:#ddd; }
+/* === Page Container === */
+.page { display:none; max-width:900px; margin:0 auto; padding:15px; }
+.active { display:block; }
+
+/* === Form Box === */
+.form-box {
+  background:#111a33; padding:20px;
+  border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.6);
+}
+.form-box input, .form-box select {
+  width:100%; padding:10px; margin:8px 0;
+  border:none; border-radius:6px; font-size:14px;
+}
+.form-box button {
+  width:100%; padding:10px; margin-top:10px;
+  border:none; border-radius:6px;
+  font-size:14px; font-weight:bold;
+  cursor:pointer;
+}
+
+/* === Cards / Grid === */
+.container { padding:10px; }
+.grid {
+  display:grid; gap:10px;
+  grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
+}
+.card {
+  background:#111a33; padding:15px; border-radius:8px;
+}
+
+/* === Game Type === */
+.menu-game-type {
+  display:flex; gap:10px; margin:15px 0;
+  flex-wrap:wrap;
+}
+.game-type-card {
+  flex:1; padding:10px; background:#222a44;
+  border-radius:8px; text-align:center;
+  cursor:pointer;
+}
+.game-type-card.active { background:#FFD700; color:#000; }
+
+/* Provider */
+.provider-boxes {
+  display:grid; gap:10px;
+  grid-template-columns:repeat(auto-fit, minmax(100px,1fr));
+  margin:15px 0;
+}
+.provider-card {
+  background:#333a55; padding:10px; text-align:center;
+  border-radius:6px; cursor:pointer;
+}
+.provider-card:hover { background:#FFD700; color:#000; }
+
+/* Games */
+.game-grid {
+  display:grid; gap:10px;
+  grid-template-columns:repeat(auto-fit, minmax(140px,1fr));
+}
+.game-card {
+  background:#1a1f33; padding:10px; border-radius:8px;
+  text-align:center; font-size:13px;
+}
+.game-card img { width:100%; height:auto; border-radius:6px; }
+
+/* === Bottom Nav === */
+.bottom-nav {
+  position:fixed; bottom:0; left:0; right:0;
+  background:#111a33; display:flex; justify-content:space-around;
+  border-top:1px solid #333;
+  z-index:200;
+}
+.bottom-nav a {
+  flex:1; padding:6px 0;
+  text-align:center; color:white;
+  font-size:12px; text-decoration:none;
+}
+.bottom-nav img { width:22px; height:22px; }
+
+/* === Responsive === */
+@media (max-width:600px) {
+  .banner h1 { font-size:22px; }
+  .banner p { font-size:14px; }
+  .btn-main { font-size:14px; padding:8px; }
+  .login-form input, .login-form button { font-size:12px; }
+  .btn-wa { font-size:12px; padding:5px 8px; }
+  .bottom-nav span { display:block; font-size:11px; }
+}
 </style>
 </head>
 
 <body>
-<!-- Home -->
+<!-- ====== Home ====== -->
 <div id="home" class="page active">
-<header>
-  <div class="logo"><img src="jnt4d.png" alt="jnt4d Logo"></div>
-  <div class="login-form">
-    <input type="text" id="userLogin" placeholder="User ID" />
-    <input type="password" id="passLogin" placeholder="Kata Sandi" />
-    <button class="btn-login" onclick="login()">Login</button>
-    <button class="btn-daftar" onclick="showPage('daftar')">Daftar</button>
-  </div>
-  <div style="width:100%; text-align:right;">
-    <a href="https://wa.me/6282128009210" target="_blank" class="btn-wa">💬 Hubungi WhatsApp / Live Chat</a>
-  </div>
-</header>
+  <header>
+    <div class="logo"><img src="jnt4d.png" alt="jnt4d Logo"></div>
+    <div class="login-form">
+      <input type="text" id="userLogin" placeholder="User ID" />
+      <input type="password" id="passLogin" placeholder="Kata Sandi" />
+      <button class="btn-login" onclick="login()">Login</button>
+      <button class="btn-daftar" onclick="showPage('daftar')">Daftar</button>
+    </div>
+    <div style="width:100%; text-align:right;">
+      <a href="https://wa.me/6282128009210" target="_blank" class="btn-wa">💬 Hubungi WhatsApp / Live Chat</a>
+    </div>
+  </header>
 
-<!-- Running text di bawah WhatsApp -->
-<div id="runningText">
-  <span>⚡ Layanan Admin 24 Jam | 🎉 Promo Deposit 100% Member Baru | 🔥 Event Turnamen Mingguan | 💎 Withdraw Cepat & Aman</span>
-</div>
+  <!-- Running text -->
+  <div id="runningText">
+    <span>⚡ Layanan Admin 24 Jam | 🎉 Promo Deposit 100% Member Baru | 🔥 Event Turnamen Mingguan | 💎 Withdraw Cepat & Aman</span>
+  </div>
 
-<div class="banner">
-  <h1>🎉 WELCOME TO JNT-4D 🎉</h1>
-  <p class="small">Situs terbaik di Asia • Aman & 100% Resmi</p>
-  <button class="btn-main" onclick="alert('Fitur Main Sekarang belum aktif')">Main Sekarang</button>
-  <img src="https://raw.githubusercontent.com/reyreygits/ariptoto11/8c6b6bc656f69037edc448d4997d0d9d784e8711/poto.png2" alt="Banner Image" class="center-image" />
-</div>
+  <div class="banner">
+    <h1>🎉 WELCOME TO JNT-4D 🎉</h1>
+    <p>Situs terbaik di Asia • Aman & 100% Resmi</p>
+    <button class="btn-main" onclick="alert('Fitur Main Sekarang belum aktif')">Main Sekarang</button>
+    <img src="https://raw.githubusercontent.com/reyreygits/ariptoto11/8c6b6bc656f69037edc448d4997d0d9d784e8711/poto.png2" alt="Banner Image" class="center-image" />
+  </div>
 </div>
 
 <!-- Daftar -->
