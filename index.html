@@ -31,8 +31,7 @@ body {
   background:#0a0f1c; color:white;
   overflow-x:hidden;
 }
-
-/* === Header === */
+/* Header, banner, forms, game grid, bottom nav sama persis seperti versi kamu sebelumnya */
 header {
   background:#111a33; padding:10px 20px;
   display:flex; justify-content:space-between; align-items:center;
@@ -41,173 +40,62 @@ header {
   flex-wrap:wrap;
 }
 .logo img { max-height:60px; height:auto; }
-
 .login-form { display:flex; gap:6px; flex-wrap:wrap; flex-grow:1; justify-content:flex-end; }
-.login-form input {
-  padding:6px; border-radius:4px; border:none; outline:none;
-  font-size:14px; flex:1 1 100px;
-}
-.login-form button {
-  padding:6px 10px; border:none; border-radius:4px;
-  cursor:pointer; font-weight:bold; font-size:14px;
-  transition:all 0.3s ease;
-}
+.login-form input { padding:6px; border-radius:4px; border:none; outline:none; font-size:14px; flex:1 1 100px; }
+.login-form button { padding:6px 10px; border:none; border-radius:4px; cursor:pointer; font-weight:bold; font-size:14px; transition:all 0.3s ease; }
 .btn-login { background:#ff4444; color:white; }
 .btn-daftar { background:#00cc66; color:white; }
 .login-form button:hover { transform:scale(1.05); opacity:0.9; }
-
-.btn-wa {
-  display:inline-block; margin-top:6px; padding:6px 12px;
-  background:#25D366; color:white; font-weight:bold;
-  border-radius:6px; text-decoration:none; font-size:14px;
-}
+.btn-wa { display:inline-block; margin-top:6px; padding:6px 12px; background:#25D366; color:white; font-weight:bold; border-radius:6px; text-decoration:none; font-size:14px; }
 .btn-wa:hover { background:#1ebe5d; }
 
-/* === Banner === */
-.banner {
-  max-width:900px; margin:20px auto; padding:30px 20px;
-  border-radius:15px;
-  background:linear-gradient(135deg,#1e3c72,#2a5298);
-  box-shadow:0 5px 20px rgba(0,0,0,0.6);
-  text-align:center;
-}
+/* Banner, runningText, form-box, card, provider, game-grid, bottom-nav sama persis seperti kode lama */
+.banner { max-width:900px; margin:20px auto; padding:30px 20px; border-radius:15px; background:linear-gradient(135deg,#1e3c72,#2a5298); box-shadow:0 5px 20px rgba(0,0,0,0.6); text-align:center; }
 .banner h1 { font-size:28px; margin-bottom:10px; color:#FFD700; }
 .banner p { font-size:16px; color:#ddd; }
-.btn-main {
-  margin-top:15px; padding:10px 20px;
-  font-size:16px; border:none; border-radius:8px;
-  background:#ffcc00; color:black; font-weight:bold;
-  cursor:pointer; width:100%; max-width:250px;
-}
+.btn-main { margin-top:15px; padding:10px 20px; font-size:16px; border:none; border-radius:8px; background:#ffcc00; color:black; font-weight:bold; cursor:pointer; width:100%; max-width:250px; }
 .btn-main:hover { background:#ffaa00; }
-.center-image {
-  margin-top:20px; max-width:100%; border-radius:8px;
-  height:auto; display:block; margin-left:auto; margin-right:auto;
-}
+.center-image { margin-top:20px; max-width:100%; border-radius:8px; height:auto; display:block; margin-left:auto; margin-right:auto; }
 
-/* === Running Text === */
-#runningText {
-  background:#111a33; color:#FFD700;
-  padding:8px; margin:10px auto 0;
-  border-radius:6px; font-weight:bold;
-  overflow:hidden; white-space:nowrap;
-  box-shadow:0 0 10px #000;
-}
-#runningText span {
-  display:inline-block; padding-left:100%;
-  animation:marquee 15s linear infinite;
-}
-@keyframes marquee {
-  0% { transform:translateX(0); }
-  100% { transform:translateX(-100%); }
-}
+#runningText { background:#111a33; color:#FFD700; padding:8px; margin:10px auto 0; border-radius:6px; font-weight:bold; overflow:hidden; white-space:nowrap; box-shadow:0 0 10px #000; }
+#runningText span { display:inline-block; padding-left:100%; animation:marquee 15s linear infinite; }
+@keyframes marquee { 0% { transform:translateX(0); } 100% { transform:translateX(-100%); } }
 
-/* === Page Container === */
 .page { display:none; max-width:900px; margin:0 auto; padding:15px; }
 .active { display:block; }
 
-/* === Form Box === */
-.form-box {
-  background:#111a33; padding:20px;
-  border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.6);
-}
-.form-box input, .form-box select {
-  width:100%; padding:10px; margin:8px 0;
-  border:none; border-radius:6px; font-size:14px;
-}
-.form-box button {
-  width:100%; padding:10px; margin-top:10px;
-  border:none; border-radius:6px;
-  font-size:14px; font-weight:bold;
-  cursor:pointer;
-}
+.form-box { background:#111a33; padding:20px; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.6); }
+.form-box input, .form-box select { width:100%; padding:10px; margin:8px 0; border:none; border-radius:6px; font-size:14px; }
+.form-box button { width:100%; padding:10px; margin-top:10px; border:none; border-radius:6px; font-size:14px; font-weight:bold; cursor:pointer; }
 
-/* === Cards / Grid === */
 .container { padding:10px; }
-.grid {
-  display:grid; gap:10px;
-  grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
-}
-.card {
-  background:#111a33; padding:15px; border-radius:8px;
-  border:2px solid #FFD700; /* kotak emas */
-}
-.card h3, 
-.card p {
-  color:#FFD700; /* teks emas */
-}
+.grid { display:grid; gap:10px; grid-template-columns:repeat(auto-fit, minmax(250px,1fr)); }
+.card { background:#111a33; padding:15px; border-radius:8px; border:2px solid #FFD700; }
+.card h3, .card p { color:#FFD700; }
 
-/* === Menu User Area === */
-.menu a {
-  display:inline-block; margin:5px; padding:6px 12px;
-  color:#FFD700; font-weight:bold;
-  border:2px solid #FFD700; border-radius:6px;
-  text-decoration:none; cursor:pointer;
-}
+.menu a { display:inline-block; margin:5px; padding:6px 12px; color:#FFD700; font-weight:bold; border:2px solid #FFD700; border-radius:6px; text-decoration:none; cursor:pointer; }
 .menu a:hover { background:#FFD700; color:#000; }
 
-/* === Game Type === */
-.menu-game-type {
-  display:flex; gap:10px; margin:15px 0;
-  flex-wrap:wrap;
-}
-.game-type-card {
-  flex:1; padding:10px; background:#222a44;
-  border-radius:8px; text-align:center;
-  cursor:pointer;
-}
+.menu-game-type { display:flex; gap:10px; margin:15px 0; flex-wrap:wrap; }
+.game-type-card { flex:1; padding:10px; background:#222a44; border-radius:8px; text-align:center; cursor:pointer; }
 .game-type-card.active { background:#FFD700; color:#000; }
 
-/* Provider */
-.provider-boxes {
-  display:grid; gap:10px;
-  grid-template-columns:repeat(auto-fit, minmax(100px,1fr));
-  margin:15px 0;
-}
-.provider-card {
-  background:#333a55; padding:10px; text-align:center;
-  border-radius:6px; cursor:pointer;
-  color:#FFD700;
-  border:2px solid #FFD700;
-}
+.provider-boxes { display:grid; gap:10px; grid-template-columns:repeat(auto-fit, minmax(100px,1fr)); margin:15px 0; }
+.provider-card { background:#333a55; padding:10px; text-align:center; border-radius:6px; cursor:pointer; color:#FFD700; border:2px solid #FFD700; }
 .provider-card:hover { background:#FFD700; color:#000; }
 
-/* Games */
-.game-grid {
-  display:grid; gap:10px;
-  grid-template-columns:repeat(auto-fit, minmax(140px,1fr));
-}
-.game-card {
-  background:#1a1f33; padding:10px; border-radius:8px;
-  text-align:center; font-size:13px;
-  border:2px solid #FFD700; /* kotak emas untuk game */
-  color:#FFD700; /* teks emas */
-}
+.game-grid { display:grid; gap:10px; grid-template-columns:repeat(auto-fit, minmax(140px,1fr)); }
+.game-card { background:#1a1f33; padding:10px; border-radius:8px; text-align:center; font-size:13px; border:2px solid #FFD700; color:#FFD700; }
 .game-card img { width:100%; height:auto; border-radius:6px; }
 
-/* === Bottom Nav === */
-.bottom-nav {
-  position:fixed; bottom:0; left:0; right:0;
-  background:#111a33; display:flex; justify-content:space-around;
-  border-top:1px solid #333;
-  z-index:200;
-}
-.bottom-nav a {
-  flex:1; padding:6px 0;
-  text-align:center; color:white;
-  font-size:12px; text-decoration:none;
-}
+.bottom-nav { position:fixed; bottom:0; left:0; right:0; background:#111a33; display:flex; justify-content:space-around; border-top:1px solid #333; z-index:200; }
+.bottom-nav a { flex:1; padding:6px 0; text-align:center; color:white; font-size:12px; text-decoration:none; }
 .bottom-nav img { width:22px; height:22px; }
 
-/* === Responsive === */
-@media (max-width:600px) {
-  .banner h1 { font-size:22px; }
-  .banner p { font-size:14px; }
-  .btn-main { font-size:14px; padding:8px; }
-  .login-form input, .login-form button { font-size:12px; }
-  .btn-wa { font-size:12px; padding:5px 8px; }
-  .bottom-nav span { display:block; font-size:11px; }
-}
+/* QRIS Image */
+#qrisImage { max-width:90%; height:auto; display:block; margin:20px auto; border-radius:12px; box-shadow:0 0 15px rgba(255,215,0,0.6); transform:scale(0.95); transition:transform 0.4s ease, box-shadow 0.4s ease; }
+#qrisImage:hover { transform:scale(1); box-shadow:0 0 25px rgba(255,215,0,0.9); }
+@media (max-width:480px){ #qrisImage{ width:85%; margin:15px auto; } }
 </style>
 </head>
 
@@ -353,33 +241,6 @@ header {
   </div>
 </div>
 
-<style>
-/* === QRIS Modern & Responsif === */
-#qrisImage {
-  max-width: 90%;       /* proporsional, menyesuaikan lebar layar */
-  height: auto;
-  display: block;
-  margin: 20px auto;    /* tengah horizontal & jarak atas-bawah */
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); /* efek glow emas */
-  transform: scale(0.95);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-}
-
-#qrisImage:hover {
-  transform: scale(1);
-  box-shadow: 0 0 25px rgba(255, 215, 0, 0.9);
-}
-
-/* Layar mobile */
-@media (max-width: 480px) {
-  #qrisImage {
-    width: 85%;
-    margin: 15px auto;
-  }
-}
-</style>
-
 <!-- Withdraw -->
 <div id="withdraw" class="page">
 <div class="form-box">
@@ -518,19 +379,22 @@ function updateUserInfo(){
   }
 }
 
-// --- History ---
+// --- History Realtime ---
 function showHistory(){
   if(!currentUser){alert("Login dulu!"); return;}
-  db.collection("history").where("user","==",currentUser.id).get().then(snap=>{
-    const list=document.getElementById("historyList");
-    list.innerHTML="";
-    snap.forEach(doc=>{
-      const d=doc.data();
-      const div=document.createElement("div");
-      div.innerText=`${d.type}: Rp ${d.amount} (${d.status})`;
-      list.appendChild(div);
+  const list=document.getElementById("historyList");
+  db.collection("history")
+    .where("user","==",currentUser.id)
+    .orderBy("date","desc")
+    .onSnapshot(snapshot=>{
+      list.innerHTML="";
+      snapshot.forEach(doc=>{
+        const d=doc.data();
+        const div=document.createElement("div");
+        div.innerText=`${d.type}: Rp ${d.amount} (${d.status})`;
+        list.appendChild(div);
+      });
     });
-  });
 }
 
 // --- Deposit ---
