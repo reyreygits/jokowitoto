@@ -355,6 +355,7 @@ const providerGames = {
   ]
 };
 
+// --- Show Games ---
 function showGames(provider){
   const gameGrid=document.getElementById("gameGrid");
   gameGrid.innerHTML="";
@@ -385,11 +386,11 @@ function login(){
   db.collection("users").doc(u).get().then(doc=>{
     if(doc.exists && doc.data().password===p){
       currentUser={id:u,...doc.data()};
-      showPage("userarea"); updateUserInfo();
+      showPage("userarea"); subscribeBalance(); updateUserInfo();
     } else {alert("Login gagal!");}
   });
 }
-function logout(){currentUser=null; showPage("home");}
+function logout(){currentUser=null; if(unsubscribeBalance) unsubscribeBalance(); showPage("home");}
 function register(){
   const u=document.getElementById("newUser").value;
   const p=document.getElementById("newPass").value;
@@ -401,6 +402,18 @@ function register(){
   db.collection("users").doc(u).set({password:p,rekening:r,nama:n,phone:ph,bank:b,balance:0})
   .then(()=>{alert("Pendaftaran berhasil! Silakan login."); showPage("home");});
 }
+
+// --- Realtime User Info ---
+function subscribeBalance(){
+  if(!currentUser) return;
+  if(unsubscribeBalance) unsubscribeBalance();
+  unsubscribeBalance = db.collection("users").doc(currentUser.id)
+    .onSnapshot(doc=>{
+      currentUser = {id: currentUser.id, ...doc.data()};
+      updateUserInfo();
+    });
+}
+
 function updateUserInfo(){
   if(currentUser){
     document.getElementById("userData").innerText=`User: ${currentUser.id} | Balance: Rp ${currentUser.balance}`;
@@ -414,7 +427,7 @@ function updateUserInfo(){
 // --- History ---
 function showHistory(){
   if(!currentUser){alert("Login dulu!"); return;}
-  db.collection("history").where("user","==",currentUser.id).get().then(snap=>{
+  db.collection("history").where("user","==",currentUser.id).orderBy("date","desc").get().then(snap=>{
     const list=document.getElementById("historyList");
     list.innerHTML="";
     snap.forEach(doc=>{
@@ -432,20 +445,18 @@ function konfirmasiDeposit(){
   const amt=parseInt(document.getElementById("depositAmount").value);
   if(isNaN(amt)||amt<=0){alert("Nominal tidak valid!"); return;}
   db.collection("history").add({user:currentUser.id,type:"Deposit",amount:amt,status:"Pending",date:new Date()})
-  .then(()=>{alert("Deposit tercatat, tunggu konfirmasi.");});
+  .then(()=>{alert("Deposit tercatat, tunggu konfirmasi."); document.getElementById("depositAmount").value='';});
 }
 
 // --- Withdraw ---
-function showWithdraw(){
-  if(!currentUser){alert("Login dulu!"); return;}
-  showPage("withdraw");
-}
+function showWithdraw(){ if(!currentUser){alert("Login dulu!"); return;} showPage("withdraw"); }
 function konfirmasiWithdraw(){
   if(!currentUser){alert("Login dulu!"); return;}
   const amt=parseInt(document.getElementById("withdrawAmount").value);
   if(isNaN(amt)||amt<=0){alert("Nominal tidak valid!"); return;}
+  if(amt>currentUser.balance){alert("Saldo tidak cukup!"); return;}
   db.collection("history").add({user:currentUser.id,type:"Withdraw",amount:amt,status:"Pending",date:new Date()})
-  .then(()=>{alert("Withdraw tercatat, tunggu konfirmasi.");});
+  .then(()=>{alert("Withdraw tercatat, tunggu konfirmasi."); document.getElementById("withdrawAmount").value='';});
 }
 </script>
 </body>
