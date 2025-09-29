@@ -341,17 +341,44 @@ header {
 
 <!-- Deposit -->
 <div id="deposit" class="page">
-<div class="form-box">
-<h2>💸 Deposit Saldo</h2>
-<p>Scan QRIS di bawah untuk melakukan pembayaran:</p>
-<img id="qrisImage" src="https://raw.githubusercontent.com/reyreygits/ariptoto11/main/qris1.png" alt="QRIS" />
-<label for="depositAmount">Nominal Deposit (Rp)</label>
-<input type="number" id="depositAmount" placeholder="Contoh: 100000" />
-<button onclick="konfirmasiDeposit()">Konfirmasi Deposit</button>
-<br /><br />
-<button style="background:#ff4444" onclick="showPage('userarea')">⬅️ Kembali</button>
+  <div class="form-box">
+    <h2>💸 Deposit Saldo</h2>
+    <p>Scan QRIS di bawah untuk melakukan pembayaran:</p>
+    <img id="qrisImage" src="https://raw.githubusercontent.com/reyreygits/ariptoto11/main/qris1.png" alt="QRIS" />
+    <label for="depositAmount">Nominal Deposit (Rp)</label>
+    <input type="number" id="depositAmount" placeholder="Contoh: 100000" />
+    <button onclick="konfirmasiDeposit()">Konfirmasi Deposit</button>
+    <br /><br />
+    <button style="background:#ff4444" onclick="showPage('userarea')">⬅️ Kembali</button>
+  </div>
 </div>
-</div>
+
+<style>
+/* === QRIS Modern & Responsif === */
+#qrisImage {
+  max-width: 90%;       /* proporsional, menyesuaikan lebar layar */
+  height: auto;
+  display: block;
+  margin: 20px auto;    /* tengah horizontal & jarak atas-bawah */
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); /* efek glow emas */
+  transform: scale(0.95);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+#qrisImage:hover {
+  transform: scale(1);
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.9);
+}
+
+/* Layar mobile */
+@media (max-width: 480px) {
+  #qrisImage {
+    width: 85%;
+    margin: 15px auto;
+  }
+}
+</style>
 
 <!-- Withdraw -->
 <div id="withdraw" class="page">
