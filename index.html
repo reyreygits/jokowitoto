@@ -504,10 +504,11 @@ function konfirmasiDeposit(){
     type: "Deposit",
     amount: amt,
     status: "Pending",
-    date: new Date()
+    date: firebase.firestore.Timestamp.now()
   }).then(()=>{
     alert("💛 Deposit sedang diproses admin. Harap hubungi Live Chat untuk konfirmasi.");
     document.getElementById("depositAmount").value="";
+    showHistory();
   }).catch(err=>{
     console.error(err);
     alert("Terjadi kesalahan, coba lagi!");
@@ -519,23 +520,35 @@ function showWithdraw(){
   if(!currentUser){alert("Login dulu!"); return;}
   showPage("withdraw");
 }
+
 function konfirmasiWithdraw(){
   if(!currentUser){alert("Login dulu!"); return;}
   const amt=parseInt(document.getElementById("withdrawAmount").value);
   if(isNaN(amt)||amt<=0){alert("Nominal tidak valid!"); return;}
-  if(amt>currentUser.balance){alert("Saldo tidak cukup!"); return;}
-  db.collection("history").add({
-    user: currentUser.id,
-    type: "Withdraw",
-    amount: amt,
-    status: "Pending",
-    date: new Date()
-  }).then(()=>{
-    alert("💛 Withdraw sedang menunggu persetujuan admin. Harap hubungi Live Chat untuk konfirmasi.");
-    document.getElementById("withdrawAmount").value="";
-  }).catch(err=>{
-    console.error(err);
-    alert("Terjadi kesalahan, coba lagi!");
+
+  // ambil saldo terbaru user sebelum cek
+  db.collection("users").doc(currentUser.id).get().then(doc=>{
+    if(!doc.exists){alert("User tidak ditemukan!"); return;}
+    const userData = doc.data();
+    if(amt > userData.balance){
+      alert("Saldo tidak cukup!");
+      return;
+    }
+
+    db.collection("history").add({
+      user: currentUser.id,
+      type: "Withdraw",
+      amount: amt,
+      status: "Pending",
+      date: firebase.firestore.Timestamp.now()
+    }).then(()=>{
+      alert("💛 Withdraw sedang menunggu persetujuan admin. Harap hubungi Live Chat untuk konfirmasi.");
+      document.getElementById("withdrawAmount").value="";
+      showHistory();
+    }).catch(err=>{
+      console.error(err);
+      alert("Terjadi kesalahan, coba lagi!");
+    });
   });
 }
 
