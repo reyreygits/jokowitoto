@@ -108,40 +108,6 @@ header { background:#111a33; padding:10px 20px; display:flex; justify-content:sp
 .game-card:hover { transform:translateY(-6px) scale(1.03); box-shadow:0 8px 20px rgba(255,215,0,0.6); }
 .game-card img { width:100%; border-radius:6px; margin-bottom:8px; }
 
-/* Kotak Togel / Slot / Casino */
-.menu-game-type {
-  display:flex;
-  gap:15px;
-  justify-content:center;
-  margin-top:20px;
-  flex-wrap:wrap;
-}
-.game-type-card {
-  padding:10px 20px;
-  background:#2a2a2a;
-  color:#FFD700;
-  font-weight:bold;
-  border-radius:8px;
-  text-align:center;
-  cursor:pointer;
-  box-shadow:0 4px 12px rgba(255,215,0,0.3);
-  transition:all 0.3s ease;
-  user-select:none;
-}
-.game-type-card:hover {
-  transform:scale(1.05);
-  box-shadow:0 6px 18px rgba(255,215,0,0.6);
-}
-.game-type-card.active {
-  background:#FFD700;
-  color:#111;
-}
-
-/* Togel Table */
-#togelTable table { width:100%; border-collapse:collapse; }
-#togelTable th, #togelTable td { padding:8px; border-bottom:1px solid #FFD700; }
-
-/* QRIS */
 #qrisImage { width:250px; max-width:80%; height:auto; display:block; margin:15px auto; border-radius:8px; }
 
 /* Footer menu (Bottom Navigation) */
@@ -204,7 +170,7 @@ header { background:#111a33; padding:10px 20px; display:flex; justify-content:sp
 <!-- Home -->
 <div id="home" class="page active">
 <header>
-  <div class="logo"><img src="jnt4d.png" alt="jnt Logo"></div>
+  <div class="logo"><img src="jokowitoto.png" alt="jokowitoto Logo"></div>
   <div class="login-form">
     <input type="text" id="userLogin" placeholder="User ID" />
     <input type="password" id="passLogin" placeholder="Kata Sandi" />
@@ -216,7 +182,7 @@ header { background:#111a33; padding:10px 20px; display:flex; justify-content:sp
   </div>
 </header>
 <div class="banner">
-  <h1>🎉 WELCOME TO JNT-4D 🎉</h1>
+  <h1>🎉 WELCOME TO JOKOWI-TOTO 🎉</h1>
   <p class="small">Situs terbaik di Asia • Aman & 100% Resmi</p>
   <button class="btn-main" onclick="alert('Fitur Main Sekarang belum aktif')">Main Sekarang</button>
   <img src="https://raw.githubusercontent.com/reyreygits/ariptoto11/8c6b6bc656f69037edc448d4997d0d9d784e8711/poto.png2" alt="Banner Image" class="center-image" />
@@ -252,7 +218,7 @@ header { background:#111a33; padding:10px 20px; display:flex; justify-content:sp
 <!-- User Area -->
 <div id="userarea" class="page">
 <header>
-<div class="logo"><img src="jnt4d.png" alt="jnt Logo"></div>
+<div class="logo"><img src="jokowitoto.png" alt="jokowitoto Logo"></div>
 <div class="menu">
 <a href="#" onclick="showHistory()">History</a>
 <a href="#" onclick="showPage('deposit')">Deposit</a>
@@ -278,38 +244,6 @@ header { background:#111a33; padding:10px 20px; display:flex; justify-content:sp
 <h3>Last Deposit/Withdraw Status</h3>
 <div id="historyList" style="max-height:200px; overflow-y:auto;"></div>
 </div>
-</div>
-
-<!-- Game Type Selector -->
-<div class="menu-game-type">
-  <div class="game-type-card" data-type="slot">🎰 Slot</div>
-  <div class="game-type-card" data-type="togel">🎲 Togel</div>
-  <div class="game-type-card" data-type="casino">🎮 Casino</div>
-</div>
-
-<!-- Togel Table -->
-<div id="togelTable" style="display:none; margin-top:20px; text-align:center;">
-  <h3>Table Pasaran</h3>
-  <table>
-    <thead>
-      <tr style="border-bottom:2px solid #FFD700;">
-        <th>Nomor Keluaran</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td>Buku Mimpi</td></tr>
-      <tr><td>TOTO WUHAN</td></tr>
-      <tr><td>HK SIANG</td></tr>
-      <tr><td>MALAYSIA SIANG</td></tr>
-      <tr><td>MALAYSIA</td></tr>
-      <tr><td>MACAU</td></tr>
-      <tr><td>SINGAPORE</td></tr>
-      <tr><td>HK LOTTO</td></tr>
-      <tr><td>SYDNEY LOTTO</td></tr>
-      <tr><td>TAIWAN</td></tr>
-      <tr><td>QATAR</td></tr>
-    </tbody>
-  </table>
 </div>
 
 <div class="provider-boxes">
@@ -421,7 +355,6 @@ const providerGames = {
   ]
 };
 
-// --- Game Grid ---
 function showGames(provider){
   const gameGrid=document.getElementById("gameGrid");
   gameGrid.innerHTML="";
@@ -434,6 +367,9 @@ function showGames(provider){
     });
   }
 }
+document.querySelectorAll(".provider-card").forEach(el=>{
+  el.addEventListener("click",()=>showGames(el.textContent));
+});
 
 // --- Page Navigation ---
 function showPage(id){
@@ -462,12 +398,8 @@ function register(){
   const ph=document.getElementById("phoneNum").value;
   const b=document.getElementById("bankType").value;
   if(!u||!p||!r||!n||!ph||!b){alert("Lengkapi semua field!"); return;}
-  db.collection("users").doc(u).set({
-    password:p,rekening:r,nama:n,phone:ph,bank:b,balance:0
-  }).then(()=>{
-    alert("✅ Pendaftaran berhasil! Silakan login.");
-    showPage("home");
-  });
+  db.collection("users").doc(u).set({password:p,rekening:r,nama:n,phone:ph,bank:b,balance:0})
+  .then(()=>{alert("Pendaftaran berhasil! Silakan login."); showPage("home");});
 }
 function updateUserInfo(){
   if(currentUser){
@@ -482,7 +414,7 @@ function updateUserInfo(){
 // --- History ---
 function showHistory(){
   if(!currentUser){alert("Login dulu!"); return;}
-  db.collection("history").where("user","==",currentUser.id).orderBy("date","desc").get().then(snap=>{
+  db.collection("history").where("user","==",currentUser.id).get().then(snap=>{
     const list=document.getElementById("historyList");
     list.innerHTML="";
     snap.forEach(doc=>{
@@ -499,20 +431,8 @@ function konfirmasiDeposit(){
   if(!currentUser){alert("Login dulu!"); return;}
   const amt=parseInt(document.getElementById("depositAmount").value);
   if(isNaN(amt)||amt<=0){alert("Nominal tidak valid!"); return;}
-  db.collection("history").add({
-    user: currentUser.id,
-    type: "Deposit",
-    amount: amt,
-    status: "Pending",
-    date: firebase.firestore.Timestamp.now()
-  }).then(()=>{
-    alert("💛 Deposit sedang diproses admin. Harap hubungi Live Chat untuk konfirmasi.");
-    document.getElementById("depositAmount").value="";
-    showHistory();
-  }).catch(err=>{
-    console.error(err);
-    alert("Terjadi kesalahan, coba lagi!");
-  });
+  db.collection("history").add({user:currentUser.id,type:"Deposit",amount:amt,status:"Pending",date:new Date()})
+  .then(()=>{alert("Deposit tercatat, tunggu konfirmasi.");});
 }
 
 // --- Withdraw ---
@@ -520,54 +440,13 @@ function showWithdraw(){
   if(!currentUser){alert("Login dulu!"); return;}
   showPage("withdraw");
 }
-
 function konfirmasiWithdraw(){
   if(!currentUser){alert("Login dulu!"); return;}
   const amt=parseInt(document.getElementById("withdrawAmount").value);
   if(isNaN(amt)||amt<=0){alert("Nominal tidak valid!"); return;}
-
-  // ambil saldo terbaru user sebelum cek
-  db.collection("users").doc(currentUser.id).get().then(doc=>{
-    if(!doc.exists){alert("User tidak ditemukan!"); return;}
-    const userData = doc.data();
-    if(amt > userData.balance){
-      alert("Saldo tidak cukup!");
-      return;
-    }
-
-    db.collection("history").add({
-      user: currentUser.id,
-      type: "Withdraw",
-      amount: amt,
-      status: "Pending",
-      date: firebase.firestore.Timestamp.now()
-    }).then(()=>{
-      alert("💛 Withdraw sedang menunggu persetujuan admin. Harap hubungi Live Chat untuk konfirmasi.");
-      document.getElementById("withdrawAmount").value="";
-      showHistory();
-    }).catch(err=>{
-      console.error(err);
-      alert("Terjadi kesalahan, coba lagi!");
-    });
-  });
+  db.collection("history").add({user:currentUser.id,type:"Withdraw",amount:amt,status:"Pending",date:new Date()})
+  .then(()=>{alert("Withdraw tercatat, tunggu konfirmasi.");});
 }
-
-// --- Game Type Selection ---
-document.querySelectorAll(".game-type-card").forEach(el=>{
-  el.addEventListener("click",()=>{
-    document.querySelectorAll(".game-type-card").forEach(c=>c.classList.remove("active"));
-    el.classList.add("active");
-    const type=el.getAttribute("data-type");
-    document.getElementById("togelTable").style.display=(type==="togel")?"block":"none";
-    document.querySelector(".provider-boxes").style.display=(type!=="togel")?"grid":"none";
-    document.getElementById("gameGrid").innerHTML="";
-  });
-});
-
-// --- Provider Click ---
-document.querySelectorAll(".provider-card").forEach(pc=>{
-  pc.addEventListener("click",()=>showGames(pc.innerText));
-});
 </script>
 </body>
 </html>
