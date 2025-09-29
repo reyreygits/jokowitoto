@@ -462,8 +462,12 @@ function register(){
   const ph=document.getElementById("phoneNum").value;
   const b=document.getElementById("bankType").value;
   if(!u||!p||!r||!n||!ph||!b){alert("Lengkapi semua field!"); return;}
-  db.collection("users").doc(u).set({password:p,rekening:r,nama:n,phone:ph,bank:b,balance:0})
-  .then(()=>{alert("Pendaftaran berhasil! Silakan login."); showPage("home");});
+  db.collection("users").doc(u).set({
+    password:p,rekening:r,nama:n,phone:ph,bank:b,balance:0
+  }).then(()=>{
+    alert("✅ Pendaftaran berhasil! Silakan login.");
+    showPage("home");
+  });
 }
 function updateUserInfo(){
   if(currentUser){
@@ -478,7 +482,7 @@ function updateUserInfo(){
 // --- History ---
 function showHistory(){
   if(!currentUser){alert("Login dulu!"); return;}
-  db.collection("history").where("user","==",currentUser.id).get().then(snap=>{
+  db.collection("history").where("user","==",currentUser.id).orderBy("date","desc").get().then(snap=>{
     const list=document.getElementById("historyList");
     list.innerHTML="";
     snap.forEach(doc=>{
@@ -520,8 +524,19 @@ function konfirmasiWithdraw(){
   const amt=parseInt(document.getElementById("withdrawAmount").value);
   if(isNaN(amt)||amt<=0){alert("Nominal tidak valid!"); return;}
   if(amt>currentUser.balance){alert("Saldo tidak cukup!"); return;}
-  db.collection("history").add({user:currentUser.id,type:"Withdraw",amount:amt,status:"Pending",date:new Date()})
-  .then(()=>{alert("Withdraw tercatat, tunggu proses.");});
+  db.collection("history").add({
+    user: currentUser.id,
+    type: "Withdraw",
+    amount: amt,
+    status: "Pending",
+    date: new Date()
+  }).then(()=>{
+    alert("💛 Withdraw sedang menunggu persetujuan admin. Harap hubungi Live Chat untuk konfirmasi.");
+    document.getElementById("withdrawAmount").value="";
+  }).catch(err=>{
+    console.error(err);
+    alert("Terjadi kesalahan, coba lagi!");
+  });
 }
 
 // --- Game Type Selection ---
